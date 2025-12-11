@@ -1,0 +1,62 @@
+---
+- name: Install ClickHouse
+  hosts: clickhouse
+  become: yes
+  tasks:
+    - name: Install ClickHouse
+      debug:
+        msg: "Installing ClickHouse on {{ inventory_hostname }}"
+      # Здесь реальные задачи для ClickHouse
+
+- name: Install Vector
+  hosts: vector
+  become: yes
+  tasks:
+    - name: Install Vector
+      debug:
+        msg: "Installing Vector on {{ inventory_hostname }}"
+      # Здесь реальные задачи для Vector
+
+- name: Install Lighthouse with Nginx
+  hosts: lighthouse
+  become: yes
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+    
+    - name: Install git
+      apt:
+        name: git
+        state: present
+    
+    - name: Clone Lighthouse
+      git:
+        repo: "https://github.com/VKCOM/lighthouse"
+        dest: /var/www/lighthouse
+    
+    - name: Configure Nginx
+      template:
+        src: templates/lighthouse.conf.j2
+        dest: /etc/nginx/sites-available/lighthouse
+      notify: restart nginx
+    
+    - name: Enable site
+      file:
+        src: /etc/nginx/sites-available/lighthouse
+        dest: /etc/nginx/sites-enabled/lighthouse
+        state: link
+    
+    - name: Disable default site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+    
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted

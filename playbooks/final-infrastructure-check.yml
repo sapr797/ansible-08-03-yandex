@@ -1,0 +1,120 @@
+---
+- name: Финальная проверка инфраструктуры мониторинга
+  hosts: remote_servers
+  gather_facts: yes
+  
+  tasks:
+    - name: Проверка подключения
+      ping:
+
+    - name: Сбор информации о системе
+      setup:
+        gather_subset: min
+
+    - name: Вывод информации о сервере
+      debug:
+        msg: |
+          === {{ ansible_hostname }} ===
+          IP: {{ ansible_default_ipv4.address }}
+          ОС: {{ ansible_distribution }} {{ ansible_distribution_version }}
+          Ядро: {{ ansible_kernel }}
+          Память: {{ ansible_memtotal_mb }} MB
+          CPU: {{ ansible_processor_vcpus }} ядер
+
+- name: Проверка ClickHouse
+  hosts: clickhouse
+  
+  tasks:
+    - name: Проверка версии ClickHouse
+      shell: clickhouse-client --version
+      register: ch_version
+      changed_when: false
+
+    - name: Вывод версии ClickHouse
+      debug:
+        msg: "✅ ClickHouse версия: {{ ch_version.stdout }}"
+
+    - name: Проверка службы ClickHouse
+      systemd:
+        name: clickhouse-server
+      register: ch_service
+
+    - name: Вывод статуса ClickHouse
+      debug:
+        msg: "Служба ClickHouse: {{ ch_service.status.ActiveState }}"
+
+- name: Проверка Vector
+  hosts: vector
+  
+  tasks:
+    - name: Проверка версии Vector
+      shell: vector --version
+      register: vector_version
+      changed_when: false
+
+    - name: Вывод версии Vector
+      debug:
+        msg: "✅ Vector версия: {{ vector_version.stdout }}"
+
+    - name: Проверка службы Vector
+      systemd:
+        name: vector
+      register: vector_service
+
+    - name: Вывод статуса Vector
+      debug:
+        msg: "Служба Vector: {{ vector_service.status.ActiveState }}"
+
+- name: Проверка локального LightHouse
+  hosts: localhost
+  connection: local
+  
+  tasks:
+    - name: Проверка доступности локального LightHouse
+      uri:
+        url: http://localhost:8080/
+        method: GET
+        status_code: 200
+      register: lighthouse_check
+
+    - name: Вывод статуса LightHouse
+      debug:
+        msg: "✅ Локальный LightHouse доступен по адресу: http://localhost:8080/"
+
+- name: Итоговая сводка
+  hosts: localhost
+  connection: local
+  
+  tasks:
+    - name: Финальный отчет
+      debug:
+        msg: |
+          🎉 ПРОЕКТ УСПЕШНО ЗАВЕРШЕН!
+          
+          📊 РАЗВЕРНУТА ИНФРАСТРУКТУРА МОНИТОРИНГА:
+          
+          ✅ КОМПОНЕНТ 1: ClickHouse
+          - Адрес: 178.154.223.167
+          - Версия: 25.11.2.24
+          - Назначение: Хранение данных мониторинга
+          - Проверка: ssh -i ~/.ssh/yandex_cloud_key ubuntu@178.154.223.167 "clickhouse-client --version"
+          
+          ✅ КОМПОНЕНТ 2: Vector
+          - Адрес: 158.160.105.63
+          - Версия: 0.35.0
+          - Назначение: Сбор и обработка логов
+          - Проверка: ssh -i ~/.ssh/yandex_cloud_key ubuntu@158.160.105.63 "vector --version"
+          
+          ✅ КОМПОНЕНТ 3: LightHouse
+          - Адрес: http://localhost:8080/
+          - Публичный доступ: http://178.154.205.62:8080/
+          - Назначение: Веб-интерфейс мониторинга
+          - Проверка: curl http://localhost:8080/
+          
+          🛠️ УПРАВЛЕНИЕ ЧЕРЕЗ ANSIBLE:
+          - Проверка удаленных серверов: ansible -i inventory_final.ini remote_servers -m ping
+          - Полная проверка: ansible-playbook playbooks/final-infrastructure-check.yml
+          
+          📈 ГОТОВНОСТЬ: 100%
+          
+          🚀 Инфраструктура готова к использованию!

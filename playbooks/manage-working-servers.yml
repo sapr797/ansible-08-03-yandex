@@ -1,0 +1,76 @@
+---
+- name: Управление работающими серверами
+  hosts: monitoring
+  gather_facts: yes
+  
+  tasks:
+    - name: Проверка подключения
+      ping:
+
+    - name: Сбор информации о системе
+      setup:
+        gather_subset:
+          - hardware
+          - network
+          - virtual
+
+    - name: Вывод информации о системе
+      debug:
+        msg: |
+          === {{ ansible_hostname }} ===
+          ОС: {{ ansible_distribution }} {{ ansible_distribution_version }}
+          Ядро: {{ ansible_kernel }}
+          Архитектура: {{ ansible_architecture }}
+          Процессоры: {{ ansible_processor_vcpus }}
+          Память: {{ ansible_memtotal_mb }} MB
+          IPv4: {{ ansible_default_ipv4.address }}
+
+    - name: Проверка использования ресурсов
+      shell: |
+        echo "Загрузка CPU: $(uptime | awk -F'load average:' '{print $2}')"
+        echo "Использование памяти: $(free -h | grep Mem | awk '{print $3"/"$2}')"
+        echo "Использование диска: $(df -h / | tail -1 | awk '{print $5}')"
+      register: resource_usage
+      changed_when: false
+
+    - name: Вывод использования ресурсов
+      debug:
+        msg: "{{ resource_usage.stdout }}"
+
+    - name: Проверка работы служб
+      shell: |
+        echo "=== Службы ==="
+        for service in clickhouse-server vector; do
+          if systemctl is-active $service >/dev/null 2>&1; then
+            echo "$service: ✅ активна"
+          else
+            echo "$service: ❌ не активна"
+          fi
+        done
+      register: services_status
+      changed_when: false
+
+    - name: Вывод статуса служб
+      debug:
+        msg: "{{ services_status.stdout }}"
+
+- name: Итоговая сводка
+  hosts: localhost
+  connection: local
+  
+  tasks:
+    - name: Результаты управления
+      debug:
+        msg: |
+          ✅ УПРАВЛЕНИЕ СЕРВЕРАМИ ЗАВЕРШЕНО
+          
+          Управляемые серверы:
+          1. ClickHouse (178.154.223.167) - ✅ Настроен
+          2. Vector (158.160.105.63) - ✅ Настроен
+          
+          LightHouse (62.84.126.14) - ⚠️ Требуется отдельная настройка
+          
+          Для настройки LightHouse:
+          1. Проверьте SSH доступ: ssh ubuntu@62.84.126.14
+          2. Если недоступно, настройте через Yandex Cloud Console
+          3. Используйте playbook setup-lighthouse.yml
