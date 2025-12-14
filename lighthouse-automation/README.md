@@ -1,3 +1,17 @@
+Структура проекта
+
+ansible-hw-03/
+├── lighthouse-automation/
+│   ├── lighthouse_to_clickhouse.py     # Основной скрипт
+│   ├── requirements.txt                # Зависимости Python
+│   ├── config.example.yaml             # Пример конфигурации
+│   ├── run_lighthouse.sh              # Скрипт-обёртка
+│   └── README.md                      # Инструкция
+├── site.yml                           # Ваш Ansible playbook
+└── .github/workflows/
+    └── lint.yml                       # GitHub Actions для проверки
+
+
 # Lighthouse Automation with ClickHouse
 
 Автоматизация аудита веб-сайтов с сохранением результатов в ClickHouse.
@@ -59,5 +73,40 @@ SELECT
     avg(performance) as daily_performance
 FROM lighthouse_audits
 WHERE url = 'https://example.com'
-GROUP BY date
+GROUP BY date## 2. 🔧 Настройка окружения на ВМ Lighthouse
+
+Выполните на ВМ `lighthous`:
+
+```bash
+# 1. Установите Python и pip
+sudo apt update
+sudo apt install -y python3-pip
+
+# 2. Клонируйте или создайте структуру
+mkdir -p ~/lighthouse-automation
+cd ~/lighthouse-automation
+
+# 3. Создайте и активируйте виртуальное окружение
+python3 -m venv venv
+source venv/bin/activate
+
+# 4. Установите зависимости
+pip install clickhouse-driver PyYAML
+
+# 5. Создайте конфигурационный файл
+cat > config.yaml << 'EOF'
+clickhouse:
+  host: "178.154.220.227"
+  port: 9000
+  user: "default"
+  password: ""
+  database: "default"
+
+lighthouse:
+  chrome_path: "/usr/bin/google-chrome-stable"
+
+urls_to_audit:
+  - "https://example.com"
+  - "https://yandex.ru"
 ORDER BY date
+
