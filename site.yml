@@ -1,92 +1,66 @@
 ---
+# Домашнее задание 08-ansible-03-yandex
+# Установка ClickHouse, Vector и Lighthouse
+
 - name: Install ClickHouse
   hosts: clickhouse
   become: yes
-
+  
   tasks:
-    - name: Install apt-transport-https
+    - name: Update apt cache
       apt:
-        name: apt-transport-https
-        state: present
         update_cache: yes
-
-    - name: Add ClickHouse GPG key
-      apt_key:
-        url: https://packages.clickhouse.com/deb/pubkey.gpg
-        state: present
-
-    - name: Add ClickHouse repository
-      apt_repository:
-        repo: "deb https://packages.clickhouse.com/deb stable main"
-        state: present
-        update_cache: yes
-
+        
     - name: Install ClickHouse
       apt:
         name: clickhouse-server
         state: present
-        update_cache: yes
-
-    - name: Start ClickHouse service
-      systemd:
-        name: clickhouse-server
-        state: started
-        enabled: yes
 
 - name: Install Vector
   hosts: vector
   become: yes
-
+  
   tasks:
-    - name: Download Vector
+    - name: Download Vector package
       get_url:
-        url: https://packages.timber.io/vector/0.28.0/vector_0.28.0-1_amd64.deb
+        url: "https://packages.timber.io/vector/0.28.0/vector_0.28.0-1_amd64.deb"
         dest: /tmp/vector.deb
-        mode: '0644'
-
+        
     - name: Install Vector
       apt:
         deb: /tmp/vector.deb
         state: present
 
-    - name: Start Vector service
-      systemd:
-        name: vector
-        state: started
-        enabled: yes
-
-- name: Install Lighthouse
+- name: Install Lighthouse with Nginx
   hosts: lighthouse
   become: yes
-
+  
   tasks:
+    # 1. Установка Nginx
     - name: Install Nginx
       apt:
         name: nginx
         state: present
-        update_cache: yes
-
+        
+    # 2. Скачивание Lighthouse (статики)
     - name: Clone Lighthouse repository
       git:
-        repo: https://github.com/VKCOM/lighthouse
+        repo: "https://github.com/VKCOM/lighthouse"
         dest: /var/www/lighthouse
-
-    - name: Create Nginx config for Lighthouse
+        
+    # 3. Настройка конфига Nginx
+    - name: Configure Nginx for Lighthouse
       template:
-        src: lighthouse.conf.j2
+        src: templates/lighthouse.conf.j2
         dest: /etc/nginx/sites-available/lighthouse
-
-    - name: Enable Lighthouse site
+        
+    - name: Enable site
       file:
         src: /etc/nginx/sites-available/lighthouse
         dest: /etc/nginx/sites-enabled/lighthouse
         state: link
-
-    - name: Disable default Nginx site
-      file:
-        path: /etc/nginx/sites-enabled/default
-        state: absent
-
+        
+    # 4. Запуск веб-сервера
     - name: Restart Nginx
       systemd:
         name: nginx
