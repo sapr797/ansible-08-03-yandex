@@ -1,0 +1,18 @@
+---
+- name: Install ClickHouse
+  hosts: clickhouse
+  # без become для теста
+  
+  tasks:
+    - name: Check current user
+      command: whoami
+      register: user
+      
+    - debug:
+        msg: "Current user is {{ user.stdout }}"
+        
+    - name: Try to install without sudo
+      apt:
+        name: wget
+        state: present
+      become: no

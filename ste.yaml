@@ -1,0 +1,203 @@
+---
+# Playbook for installing ClickHouse, Vector and Lighthouse
+# Домашнее задание 08-ansible-03-yandex
+
+- name: Install and Configure ClickHouse
+  hosts: clickhouse
+  become: yes
+  vars:
+    clickhouse_version: "22.3.3.44"
+
+  tasks:
+    # Для RedHat/CentOS систем
+    - name: Download ClickHouse repository config (RedHat)
+      get_url:
+        url: "https://packages.clickhouse.com/rpm/clickhouse.repo"
+        dest: "/etc/yum.repos.d/clickhouse.repo"
+        mode: '0644'
+      when: ansible_os_family == "RedHat"
+
+    - name: Install ClickHouse (RedHat)
+      yum:
+        name:
+          - clickhouse-server
+          - clickhouse-client
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "RedHat"
+
+    # Для Debian/Ubuntu систем  
+    - name: Install ClickHouse (Debian)
+      apt:
+        name:
+          - clickhouse-server
+          - clickhouse-client
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    # Альтернативный способ - скачивание RPM пакета
+    - name: Download ClickHouse RPM package (alternative)
+      get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-server-{{ clickhouse_version }}.rpm"
+        dest: "/tmp/clickhouse-server.rpm"
+        mode: '0644'
+        timeout: 30
+      when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+
+    # Настройка конфигурации через шаблон
+    - name: Configure ClickHouse server
+      template:
+        src: "templates/clickhouse-server.xml.j2"
+        dest: "/etc/clickhouse-server/config.xml"
+        owner: clickhouse
+        group: clickhouse
+        mode: '0640'
+      notify: restart clickhouse-server
+
+    - name: Configure ClickHouse users
+      template:
+        src: "templates/users.xml.j2"
+        dest: "/etc/clickhouse-server/users.xml"
+        owner: clickhouse
+        group: clickhouse
+        mode: '0640'
+
+  handlers:
+    - name: restart clickhouse-server
+      service:
+        name: clickhouse-server
+        state: restarted
+
+- name: Install and Configure Vector
+  hosts: vector
+  become: yes
+  vars:
+    vector_version: "0.28.0"
+
+  tasks:
+    # Для RedHat/CentOS систем
+    - name: Download Vector RPM
+      get_url:
+        url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-1.x86_64.rpm"
+        dest: "/tmp/vector.rpm"
+        mode: '0644'
+      when: ansible_os_family == "RedHat"
+
+    - name: Install Vector (RedHat)
+      yum:
+        name: "/tmp/vector.rpm"
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    # Для Debian/Ubuntu систем
+    - name: Install Vector (Debian)
+      apt:
+        name: "vector"
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    # Настройка конфигурации Vector
+    - name: Configure Vector
+      template:
+        src: "templates/vector.toml.j2"
+        dest: "/etc/vector/vector.toml"
+        mode: '0644'
+      notify: restart vector
+
+  handlers:
+    - name: restart vector
+      service:
+        name: vector
+        state: restarted
+
+- name: Install and Configure Lighthouse with Nginx
+  hosts: lighthouse
+  become: yes
+  vars:
+    lighthouse_version: "master"
+    nginx_user: "www-data"
+
+  tasks:
+    # 1. Установка зависимостей
+    - name: Install prerequisites (Ubuntu/Debian)
+      apt:
+        name:
+          - nginx
+          - git
+          - curl
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install prerequisites (CentOS/RHEL)
+      yum:
+        name:
+          - nginx
+          - git
+          - curl
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "RedHat"
+
+    # 2. Скачивание Lighthouse через git
+    - name: Clone Lighthouse repository
+      git:
+        repo: "https://github.com/VKCOM/lighthouse"
+        dest: "/var/www/lighthouse"
+        version: "{{ lighthouse_version }}"
+        clone: yes
+        update: yes
+
+    # 3. Настройка Nginx для Lighthouse через шаблон
+    - name: Configure Nginx for Lighthouse
+      template:
+        src: "templates/lighthouse-nginx.conf.j2"
+        dest: "/etc/nginx/sites-available/lighthouse"
+        owner: "{{ nginx_user }}"
+        group: "{{ nginx_user }}"
+        mode: '0644'
+      notify: restart nginx
+
+    - name: Enable Lighthouse site
+      file:
+        src: /etc/nginx/sites-available/lighthouse
+        dest: /etc/nginx/sites-enabled/lighthouse
+        state: link
+      notify: restart nginx
+
+    - name: Disable default Nginx site (Debian/Ubuntu)
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      when: ansible_os_family == "Debian"
+      notify: restart nginx
+
+    # 4. Скачивание дополнительных файлов через get_url
+    - name: Download favicon for Lighthouse
+      get_url:
+        url: "https://raw.githubusercontent.com/VKCOM/lighthouse/{{ lighthouse_version }}/img/favicon.ico"
+        dest: "/var/www/lighthouse/favicon.ico"
+        mode: '0644'
+      ignore_errors: yes
+
+    # 5. Установка правильных прав
+    - name: Set proper permissions for Lighthouse
+      file:
+        path: /var/www/lighthouse
+        state: directory
+        owner: "{{ nginx_user }}"
+        group: "{{ nginx_user }}"
+        recurse: yes
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+    - name: reload nginx
+      service:
+        name: nginx
+        state: reloaded

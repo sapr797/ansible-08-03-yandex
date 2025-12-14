@@ -1,73 +1,35 @@
-# Ansible проект для развертывания ClickHouse, Vector и LightHouse
+# Домашнее задание 08-ansible-03-yandex
 
-## Архитектура
-- **ClickHouse**: 178.154.201.166 (аналитическая СУБД)
-- **Vector**: 158.160.62.159 (система сбора и обработки логов)
-- **LightHouse**: 62.84.126.14:8080 (веб-интерфейс)
+## Описание
+Playbook для установки ClickHouse, Vector и Lighthouse в Яндекс Облаке.
 
-## Структура проекта
-ans-project/
-├── inventory/
-│ └── production.yml # Конфигурация хостов
-├── playbooks/
-│ ├── clickhouse.yml # Установка ClickHouse
-│ ├── vector.yml # Установка Vector
-│ ├── lighthouse.yml # Установка LightHouse
-│ └── setup-all.yml # Установка всех компонентов
-├── templates/ # Шаблоны конфигураций
-├── ansible.cfg # Конфигурация Ansible
-└── README.md # Документация
+## Инфраструктура
+- **ClickHouse**: 51.250.94.16
+- **Vector**: 46.21.246.174  
+- **Lighthouse**: 89.169.142.63 (ID: fhmbnrd9a7k0mhpof8sf)
 
-text
+## Использование yc cli
+```bash
+# Подключение к lighthouse
+yc compute ssh --id fhmbnrd9a7k0mhpof8sf --identity-file ~/.ssh/yandex_cloud_key --login ubuntu
 
-## Инвентарь
-```yaml
-all:
-  hosts:
-    clickhouse:
-      ansible_host: 178.154.201.166
-      ansible_user: ubuntu
-    vector:
-      ansible_host: 158.160.62.159
-      ansible_user: ubuntu
-    lighthouse:
-      ansible_host: localhost
-      ansible_connection: local
-Использование
-1. Проверка доступности хостов
+# Проверка статуса ВМ
+yc compute instance get fhmbnrd9a7k0mhpof8sf
+Запуск playbook
 bash
-ansible all -m ping
-2. Установка всех компонентов
-bash
-ansible-playbook playbooks/setup-all.yml
-3. Установка отдельных компонентов
-bash
-# Установка ClickHouse
-ansible-playbook playbooks/clickhouse.yml
+# Проверка синтаксиса
+ansible-playbook site.yml --syntax-check
 
-# Установка Vector
-ansible-playbook playbooks/vector.yml
+# Тестовый запуск
+ansible-playbook site.yml --check
 
-# Установка LightHouse
-ansible-playbook playbooks/lighthouse.yml
-4. Проверка состояния
-bash
-# Проверить LightHouse
-curl http://localhost:8080/
+# Запуск
+ansible-playbook site.yml
+Используемые модули Ansible
+get_url - скачивание Vector
 
-# Проверить ClickHouse (после установки)
-ssh ubuntu@178.154.201.166 "clickhouse-client --query='SELECT version()'"
+template - настройка конфигураций
 
-# Проверить Vector (после установки)
-ssh ubuntu@158.160.62.159 "vector --version"
-Порты
-LightHouse: 8080
+apt - установка пакетов
 
-ClickHouse: 8123 (HTTP), 9000 (TCP)
-
-Vector: 8686 (метрики)
-
-Мониторинг
-LightHouse доступен по HTTP на порту 8080
-
-Все компоненты имеют systemd службы
+git - клонирование Lighthouse

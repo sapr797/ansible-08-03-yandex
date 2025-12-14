@@ -1,0 +1,19 @@
+---
+- name: Configure sudo without password
+  hosts: all
+  become: no  # сначала без sudo
+  
+  tasks:
+    - name: Check if we can run sudo without password
+      command: sudo -n whoami
+      register: sudo_check
+      ignore_errors: yes
+      
+    - name: Setup passwordless sudo if needed
+      become: yes
+      lineinfile:
+        path: /etc/sudoers.d/ubuntu
+        line: "ubuntu ALL=(ALL) NOPASSWD:ALL"
+        create: yes
+        mode: '0440'
+      when: sudo_check.failed

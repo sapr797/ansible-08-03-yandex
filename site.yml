@@ -2,61 +2,92 @@
 - name: Install ClickHouse
   hosts: clickhouse
   become: yes
+
   tasks:
+    - name: Install apt-transport-https
+      apt:
+        name: apt-transport-https
+        state: present
+        update_cache: yes
+
+    - name: Add ClickHouse GPG key
+      apt_key:
+        url: https://packages.clickhouse.com/deb/pubkey.gpg
+        state: present
+
+    - name: Add ClickHouse repository
+      apt_repository:
+        repo: "deb https://packages.clickhouse.com/deb stable main"
+        state: present
+        update_cache: yes
+
     - name: Install ClickHouse
-      debug:
-        msg: "Installing ClickHouse on {{ inventory_hostname }}"
-      # Здесь реальные задачи для ClickHouse
+      apt:
+        name: clickhouse-server
+        state: present
+        update_cache: yes
+
+    - name: Start ClickHouse service
+      systemd:
+        name: clickhouse-server
+        state: started
+        enabled: yes
 
 - name: Install Vector
   hosts: vector
   become: yes
-  tasks:
-    - name: Install Vector
-      debug:
-        msg: "Installing Vector on {{ inventory_hostname }}"
-      # Здесь реальные задачи для Vector
 
-- name: Install Lighthouse with Nginx
+  tasks:
+    - name: Download Vector
+      get_url:
+        url: https://packages.timber.io/vector/0.28.0/vector_0.28.0-1_amd64.deb
+        dest: /tmp/vector.deb
+        mode: '0644'
+
+    - name: Install Vector
+      apt:
+        deb: /tmp/vector.deb
+        state: present
+
+    - name: Start Vector service
+      systemd:
+        name: vector
+        state: started
+        enabled: yes
+
+- name: Install Lighthouse
   hosts: lighthouse
   become: yes
+
   tasks:
     - name: Install Nginx
       apt:
         name: nginx
         state: present
         update_cache: yes
-      when: ansible_os_family == "Debian"
-    
-    - name: Install git
-      apt:
-        name: git
-        state: present
-    
-    - name: Clone Lighthouse
+
+    - name: Clone Lighthouse repository
       git:
-        repo: "https://github.com/VKCOM/lighthouse"
+        repo: https://github.com/VKCOM/lighthouse
         dest: /var/www/lighthouse
-    
-    - name: Configure Nginx
+
+    - name: Create Nginx config for Lighthouse
       template:
-        src: templates/lighthouse.conf.j2
+        src: lighthouse.conf.j2
         dest: /etc/nginx/sites-available/lighthouse
-      notify: restart nginx
-    
-    - name: Enable site
+
+    - name: Enable Lighthouse site
       file:
         src: /etc/nginx/sites-available/lighthouse
         dest: /etc/nginx/sites-enabled/lighthouse
         state: link
-    
-    - name: Disable default site
+
+    - name: Disable default Nginx site
       file:
         path: /etc/nginx/sites-enabled/default
         state: absent
-    
-  handlers:
-    - name: restart nginx
-      service:
+
+    - name: Restart Nginx
+      systemd:
         name: nginx
         state: restarted

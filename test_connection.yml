@@ -1,0 +1,6 @@
+---
+- name: Test connection
+  hosts: all
+  gather_facts: no
+  tasks:
+    - ping:

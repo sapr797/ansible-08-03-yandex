@@ -1,0 +1,474 @@
+2025-12-11 19:42:46,072 p=9746 u=alexlinux n=ansible WARNING| [WARNING]: Failed to parse inventory with 'ini' plugin: Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+
+Failed to parse inventory with 'ini' plugin.
+
+<<< caused by >>>
+
+Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+Origin: /home/alexlinux/ansible-hw-03/inventory/hosts.ini
+
+
+2025-12-11 19:42:46,072 p=9746 u=alexlinux n=ansible WARNING| [WARNING]: Unable to parse /home/alexlinux/ansible-hw-03/inventory/hosts.ini as an inventory source
+
+2025-12-11 19:42:46,073 p=9746 u=alexlinux n=ansible WARNING| [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2025-12-11 19:42:46,077 p=9746 u=alexlinux n=ansible WARNING| [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2025-12-11 19:42:46,167 p=9746 u=alexlinux n=ansible INFO| PLAY [Test SSH Connection] ************************************************************************************************
+2025-12-11 19:42:46,167 p=9746 u=alexlinux n=ansible INFO| skipping: no hosts matched
+2025-12-11 19:42:46,167 p=9746 u=alexlinux n=ansible INFO| PLAY RECAP ****************************************************************************************************************
+2025-12-11 19:42:59,361 p=9750 u=alexlinux n=ansible WARNING| [WARNING]: Failed to parse inventory with 'ini' plugin: Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+
+Failed to parse inventory with 'ini' plugin.
+
+<<< caused by >>>
+
+Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+Origin: /home/alexlinux/ansible-hw-03/inventory/hosts.ini
+
+
+2025-12-11 19:42:59,362 p=9750 u=alexlinux n=ansible WARNING| [WARNING]: Unable to parse /home/alexlinux/ansible-hw-03/inventory/hosts.ini as an inventory source
+
+2025-12-11 19:42:59,362 p=9750 u=alexlinux n=ansible WARNING| [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2025-12-11 19:42:59,366 p=9750 u=alexlinux n=ansible WARNING| [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2025-12-11 19:43:29,220 p=9754 u=alexlinux n=ansible WARNING| [WARNING]: Failed to parse inventory with 'ini' plugin: Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+
+Failed to parse inventory with 'ini' plugin.
+
+<<< caused by >>>
+
+Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+Origin: /home/alexlinux/ansible-hw-03/inventory/hosts.ini
+
+
+2025-12-11 19:43:29,221 p=9754 u=alexlinux n=ansible WARNING| [WARNING]: Unable to parse /home/alexlinux/ansible-hw-03/inventory/hosts.ini as an inventory source
+
+2025-12-11 19:43:29,221 p=9754 u=alexlinux n=ansible WARNING| [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2025-12-11 19:43:29,226 p=9754 u=alexlinux n=ansible WARNING| [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2025-12-11 19:43:29,325 p=9754 u=alexlinux n=ansible WARNING| [WARNING]: Could not match supplied host pattern, ignoring: vector
+
+2025-12-11 19:43:29,326 p=9754 u=alexlinux n=ansible WARNING| [WARNING]: Could not match supplied host pattern, ignoring: lighthouse
+
+2025-12-11 19:43:29,327 p=9754 u=alexlinux n=ansible INFO| playbook: site.yml
+2025-12-11 19:43:52,793 p=9758 u=alexlinux n=ansible WARNING| [WARNING]: Failed to parse inventory with 'ini' plugin: Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+
+Failed to parse inventory with 'ini' plugin.
+
+<<< caused by >>>
+
+Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+Origin: /home/alexlinux/ansible-hw-03/inventory/hosts.ini
+
+
+2025-12-11 19:43:52,793 p=9758 u=alexlinux n=ansible WARNING| [WARNING]: Unable to parse /home/alexlinux/ansible-hw-03/inventory/hosts.ini as an inventory source
+
+2025-12-11 19:43:52,793 p=9758 u=alexlinux n=ansible WARNING| [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2025-12-11 19:43:52,798 p=9758 u=alexlinux n=ansible WARNING| [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2025-12-11 19:43:52,912 p=9758 u=alexlinux n=ansible INFO| PLAY [Install ClickHouse] *************************************************************************************************
+2025-12-11 19:43:52,913 p=9758 u=alexlinux n=ansible INFO| skipping: no hosts matched
+2025-12-11 19:43:52,913 p=9758 u=alexlinux n=ansible WARNING| [WARNING]: Could not match supplied host pattern, ignoring: vector
+
+2025-12-11 19:43:52,913 p=9758 u=alexlinux n=ansible INFO| PLAY [Install Vector] *****************************************************************************************************
+2025-12-11 19:43:52,913 p=9758 u=alexlinux n=ansible INFO| skipping: no hosts matched
+2025-12-11 19:43:52,914 p=9758 u=alexlinux n=ansible WARNING| [WARNING]: Could not match supplied host pattern, ignoring: lighthouse
+
+2025-12-11 19:43:52,914 p=9758 u=alexlinux n=ansible INFO| PLAY [Install Lighthouse with Nginx] **************************************************************************************
+2025-12-11 19:43:52,914 p=9758 u=alexlinux n=ansible INFO| skipping: no hosts matched
+2025-12-11 19:43:52,914 p=9758 u=alexlinux n=ansible INFO| PLAY RECAP ****************************************************************************************************************
+2025-12-11 19:44:03,780 p=9761 u=alexlinux n=ansible WARNING| [WARNING]: Failed to parse inventory with 'ini' plugin: Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+
+Failed to parse inventory with 'ini' plugin.
+
+<<< caused by >>>
+
+Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+Origin: /home/alexlinux/ansible-hw-03/inventory/hosts.ini
+
+
+2025-12-11 19:44:03,780 p=9761 u=alexlinux n=ansible WARNING| [WARNING]: Unable to parse /home/alexlinux/ansible-hw-03/inventory/hosts.ini as an inventory source
+
+2025-12-11 19:44:03,780 p=9761 u=alexlinux n=ansible WARNING| [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2025-12-11 19:44:03,785 p=9761 u=alexlinux n=ansible WARNING| [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2025-12-11 19:44:03,890 p=9761 u=alexlinux n=ansible INFO| PLAY [Install ClickHouse] *************************************************************************************************
+2025-12-11 19:44:03,890 p=9761 u=alexlinux n=ansible INFO| skipping: no hosts matched
+2025-12-11 19:44:03,891 p=9761 u=alexlinux n=ansible WARNING| [WARNING]: Could not match supplied host pattern, ignoring: vector
+
+2025-12-11 19:44:03,892 p=9761 u=alexlinux n=ansible INFO| PLAY [Install Vector] *****************************************************************************************************
+2025-12-11 19:44:03,892 p=9761 u=alexlinux n=ansible INFO| skipping: no hosts matched
+2025-12-11 19:44:03,892 p=9761 u=alexlinux n=ansible WARNING| [WARNING]: Could not match supplied host pattern, ignoring: lighthouse
+
+2025-12-11 19:44:03,893 p=9761 u=alexlinux n=ansible INFO| PLAY [Install Lighthouse with Nginx] **************************************************************************************
+2025-12-11 19:44:03,893 p=9761 u=alexlinux n=ansible INFO| skipping: no hosts matched
+2025-12-11 19:44:03,893 p=9761 u=alexlinux n=ansible INFO| PLAY RECAP ****************************************************************************************************************
+2025-12-11 19:44:10,797 p=9764 u=alexlinux n=ansible WARNING| [WARNING]: Failed to parse inventory with 'ini' plugin: Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+
+Failed to parse inventory with 'ini' plugin.
+
+<<< caused by >>>
+
+Failed to parse inventory: Expected key=value host variable assignment, got: ubuntu
+Origin: /home/alexlinux/ansible-hw-03/inventory/hosts.ini
+
+
+2025-12-11 19:44:10,798 p=9764 u=alexlinux n=ansible WARNING| [WARNING]: Unable to parse /home/alexlinux/ansible-hw-03/inventory/hosts.ini as an inventory source
+
+2025-12-11 19:44:10,798 p=9764 u=alexlinux n=ansible WARNING| [WARNING]: No inventory was parsed, only implicit localhost is available
+
+2025-12-11 19:44:10,803 p=9764 u=alexlinux n=ansible WARNING| [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+2025-12-11 19:44:10,921 p=9764 u=alexlinux n=ansible INFO| PLAY [Install ClickHouse] *************************************************************************************************
+2025-12-11 19:44:10,921 p=9764 u=alexlinux n=ansible INFO| skipping: no hosts matched
+2025-12-11 19:44:10,922 p=9764 u=alexlinux n=ansible WARNING| [WARNING]: Could not match supplied host pattern, ignoring: vector
+
+2025-12-11 19:44:10,922 p=9764 u=alexlinux n=ansible INFO| PLAY [Install Vector] *****************************************************************************************************
+2025-12-11 19:44:10,922 p=9764 u=alexlinux n=ansible INFO| skipping: no hosts matched
+2025-12-11 19:44:10,923 p=9764 u=alexlinux n=ansible WARNING| [WARNING]: Could not match supplied host pattern, ignoring: lighthouse
+
+2025-12-11 19:44:10,923 p=9764 u=alexlinux n=ansible INFO| PLAY [Install Lighthouse with Nginx] **************************************************************************************
+2025-12-11 19:44:10,923 p=9764 u=alexlinux n=ansible INFO| skipping: no hosts matched
+2025-12-11 19:44:10,923 p=9764 u=alexlinux n=ansible INFO| PLAY RECAP ****************************************************************************************************************
+2025-12-11 19:46:15,821 p=9783 u=alexlinux n=ansible INFO| {
+    "_meta": {
+        "hostvars": {
+            "178.154.223.167": {
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "~/.ssh/id_rsa",
+                "ansible_user": "ubuntu"
+            }
+        },
+        "profile": "inventory_legacy"
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "clickhouse",
+            "vector",
+            "lighthouse"
+        ]
+    },
+    "clickhouse": {
+        "hosts": [
+            "178.154.223.167"
+        ]
+    }
+}
+2025-12-12 03:52:52,715 p=14878 u=alexlinux n=ansible INFO| {
+    "_meta": {
+        "hostvars": {
+            "158.160.105.63": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_become_pass": "# оставляем пустым, если sudo без пароля",
+                "ansible_become_user": "root",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key",
+                "ansible_user": "ubuntu"
+            },
+            "178.154.207.132": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_become_pass": "# оставляем пустым, если sudo без пароля",
+                "ansible_become_user": "root",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key",
+                "ansible_user": "ubuntu"
+            },
+            "178.154.223.167": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_become_pass": "# оставляем пустым, если sudo без пароля",
+                "ansible_become_user": "root",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key",
+                "ansible_user": "ubuntu"
+            }
+        },
+        "profile": "inventory_legacy"
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "clickhouse",
+            "vector",
+            "lighthouse"
+        ]
+    },
+    "clickhouse": {
+        "hosts": [
+            "178.154.223.167"
+        ]
+    },
+    "lighthouse": {
+        "hosts": [
+            "178.154.207.132"
+        ]
+    },
+    "vector": {
+        "hosts": [
+            "158.160.105.63"
+        ]
+    }
+}
+2025-12-12 03:53:01,275 p=14883 u=alexlinux n=ansible ERROR| [ERROR]: Task failed: Data could not be sent to remote host "178.154.207.132". Make sure this host can be reached over ssh: ssh: connect to host 178.154.207.132 port 22: Connection refused
+Origin: <adhoc 'ping' task>
+
+{'action': 'ping', 'args': {}, 'timeout': 0, 'async_val': 0, 'poll': 15}
+
+
+2025-12-12 03:53:01,276 p=14883 u=alexlinux n=ansible INFO| 178.154.207.132 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Task failed: Data could not be sent to remote host \"178.154.207.132\". Make sure this host can be reached over ssh: ssh: connect to host 178.154.207.132 port 22: Connection refused",
+    "unreachable": true
+}
+2025-12-12 03:53:02,267 p=14883 u=alexlinux n=ansible INFO| 158.160.105.63 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+2025-12-12 03:53:33,269 p=14883 u=alexlinux n=ansible ERROR| [ERROR]: Task failed: Timeout (32s) waiting for privilege escalation prompt:
+Origin: <adhoc 'ping' task>
+
+{'action': 'ping', 'args': {}, 'timeout': 0, 'async_val': 0, 'poll': 15}
+
+
+2025-12-12 03:53:33,269 p=14883 u=alexlinux n=ansible INFO| 178.154.223.167 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Task failed: Timeout (32s) waiting for privilege escalation prompt:",
+    "unreachable": true
+}
+2025-12-14 00:21:46,261 p=12906 u=alexlinux n=ansible INFO| {
+    "_meta": {
+        "hostvars": {
+            "158.160.105.63": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_become_pass": "# оставляем пустым, если sudo без пароля",
+                "ansible_become_user": "root",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key",
+                "ansible_user": "ubuntu"
+            },
+            "178.154.207.132": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_become_pass": "# оставляем пустым, если sudo без пароля",
+                "ansible_become_user": "root",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key",
+                "ansible_user": "ubuntu"
+            },
+            "178.154.223.167": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_become_pass": "# оставляем пустым, если sudo без пароля",
+                "ansible_become_user": "root",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key",
+                "ansible_user": "ubuntu"
+            }
+        },
+        "profile": "inventory_legacy"
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "clickhouse",
+            "vector",
+            "lighthouse"
+        ]
+    },
+    "clickhouse": {
+        "hosts": [
+            "178.154.223.167"
+        ]
+    },
+    "lighthouse": {
+        "hosts": [
+            "178.154.207.132"
+        ]
+    },
+    "vector": {
+        "hosts": [
+            "158.160.105.63"
+        ]
+    }
+}
+2025-12-14 00:24:49,936 p=12924 u=alexlinux n=ansible INFO| {
+    "_meta": {
+        "hostvars": {
+            "46.21.246.174ansible_user=ubuntu": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key"
+            },
+            "51.250.94.16": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key",
+                "ansible_user": "ubuntu"
+            },
+            "89.169.142.63": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key",
+                "ansible_user": "ubuntu"
+            }
+        },
+        "profile": "inventory_legacy"
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "clickhouse",
+            "vector",
+            "lighthouse"
+        ]
+    },
+    "clickhouse": {
+        "hosts": [
+            "51.250.94.16"
+        ]
+    },
+    "lighthouse": {
+        "hosts": [
+            "89.169.142.63"
+        ]
+    },
+    "vector": {
+        "hosts": [
+            "46.21.246.174ansible_user=ubuntu"
+        ]
+    }
+}
+2025-12-14 00:25:20,341 p=12936 u=alexlinux n=ansible INFO| {
+    "_meta": {
+        "hostvars": {
+            "46.21.246.174ansible_user=ubuntu": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key"
+            },
+            "51.250.94.16": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key",
+                "ansible_user": "ubuntu"
+            },
+            "89.169.142.63": {
+                "ansible_become": "yes",
+                "ansible_become_method": "sudo",
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "ansible_ssh_private_key_file": "/home/alexlinux/.ssh/yandex_cloud_key",
+                "ansible_user": "ubuntu"
+            }
+        },
+        "profile": "inventory_legacy"
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "clickhouse",
+            "vector",
+            "lighthouse"
+        ]
+    },
+    "clickhouse": {
+        "hosts": [
+            "51.250.94.16"
+        ]
+    },
+    "lighthouse": {
+        "hosts": [
+            "89.169.142.63"
+        ]
+    },
+    "vector": {
+        "hosts": [
+            "46.21.246.174ansible_user=ubuntu"
+        ]
+    }
+}
+2025-12-14 00:25:28,318 p=12939 u=alexlinux n=ansible ERROR| [ERROR]: Task failed: Data could not be sent to remote host "46.21.246.174ansible_user=ubuntu". Make sure this host can be reached over ssh: ssh: Could not resolve hostname 46.21.246.174ansible_user=ubuntu: Name or service not known
+Origin: <adhoc 'ping' task>
+
+{'action': 'ping', 'args': {}, 'timeout': 0, 'async_val': 0, 'poll': 15}
+
+
+2025-12-14 00:25:28,319 p=12939 u=alexlinux n=ansible INFO| 46.21.246.174ansible_user=ubuntu | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Task failed: Data could not be sent to remote host \"46.21.246.174ansible_user=ubuntu\". Make sure this host can be reached over ssh: ssh: Could not resolve hostname 46.21.246.174ansible_user=ubuntu: Name or service not known",
+    "unreachable": true
+}
+2025-12-14 00:25:28,319 p=12939 u=alexlinux n=ansible ERROR| [ERROR]: Task failed: Data could not be sent to remote host "89.169.142.63". Make sure this host can be reached over ssh: ssh: connect to host 89.169.142.63 port 22: Connection refused
+Origin: <adhoc 'ping' task>
+
+{'action': 'ping', 'args': {}, 'timeout': 0, 'async_val': 0, 'poll': 15}
+
+
+2025-12-14 00:25:28,320 p=12939 u=alexlinux n=ansible INFO| 89.169.142.63 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Task failed: Data could not be sent to remote host \"89.169.142.63\". Make sure this host can be reached over ssh: ssh: connect to host 89.169.142.63 port 22: Connection refused",
+    "unreachable": true
+}
+2025-12-14 00:25:33,591 p=12939 u=alexlinux n=ansible INFO| 51.250.94.16 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+2025-12-14 00:27:02,122 p=12962 u=alexlinux n=ansible ERROR| [ERROR]: Task failed: Data could not be sent to remote host "89.169.142.63". Make sure this host can be reached over ssh: ssh: connect to host 89.169.142.63 port 22: Connection refused
+Origin: <adhoc 'ping' task>
+
+{'action': 'ping', 'args': {}, 'timeout': 0, 'async_val': 0, 'poll': 15}
+
+
+2025-12-14 00:27:02,123 p=12962 u=alexlinux n=ansible INFO| 89.169.142.63 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Task failed: Data could not be sent to remote host \"89.169.142.63\". Make sure this host can be reached over ssh: ssh: connect to host 89.169.142.63 port 22: Connection refused",
+    "unreachable": true
+}
+2025-12-14 00:27:02,124 p=12962 u=alexlinux n=ansible ERROR| [ERROR]: Task failed: Data could not be sent to remote host "46.21.246.174ansible_user=ubuntu". Make sure this host can be reached over ssh: ssh: Could not resolve hostname 46.21.246.174ansible_user=ubuntu: Name or service not known
+Origin: <adhoc 'ping' task>
+
+{'action': 'ping', 'args': {}, 'timeout': 0, 'async_val': 0, 'poll': 15}
+
+
+2025-12-14 00:27:02,124 p=12962 u=alexlinux n=ansible INFO| 46.21.246.174ansible_user=ubuntu | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Task failed: Data could not be sent to remote host \"46.21.246.174ansible_user=ubuntu\". Make sure this host can be reached over ssh: ssh: Could not resolve hostname 46.21.246.174ansible_user=ubuntu: Name or service not known",
+    "unreachable": true
+}
+2025-12-14 00:27:05,516 p=12962 u=alexlinux n=ansible INFO| 51.250.94.16 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+2025-12-14 00:27:15,332 p=12975 u=alexlinux n=ansible INFO| playbook: site.yml
+2025-12-14 00:27:22,463 p=12978 u=alexlinux n=ansible INFO| PLAY [Install ClickHouse] ************************************************************************
+2025-12-14 00:27:22,477 p=12978 u=alexlinux n=ansible INFO| TASK [Gathering Facts] ***************************************************************************
+2025-12-14 00:27:25,113 p=12978 u=alexlinux n=ansible INFO| ok: [51.250.94.16]
+2025-12-14 00:27:25,116 p=12978 u=alexlinux n=ansible INFO| TASK [Install apt-transport-https] ***************************************************************
+2025-12-14 00:29:12,414 p=12997 u=alexlinux n=ansible INFO| PLAY [Test Playbook] *****************************************************************************
+2025-12-14 00:29:12,426 p=12997 u=alexlinux n=ansible INFO| TASK [Debug hosts] *******************************************************************************
+2025-12-14 00:29:12,450 p=12997 u=alexlinux n=ansible INFO| ok: [46.21.246.174ansible_user=ubuntu] => {
+    "msg": "Hello from 46.21.246.174ansible_user=ubuntu"
+}
+2025-12-14 00:29:12,452 p=12997 u=alexlinux n=ansible INFO| ok: [51.250.94.16] => {
+    "msg": "Hello from 51.250.94.16"
+}
+2025-12-14 00:29:12,457 p=12997 u=alexlinux n=ansible INFO| ok: [89.169.142.63] => {
+    "msg": "Hello from 89.169.142.63"
+}
+2025-12-14 00:29:12,458 p=12997 u=alexlinux n=ansible INFO| PLAY RECAP ***************************************************************************************
+2025-12-14 00:29:12,458 p=12997 u=alexlinux n=ansible INFO| 46.21.246.174ansible_user=ubuntu : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2025-12-14 00:29:12,458 p=12997 u=alexlinux n=ansible INFO| 51.250.94.16               : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2025-12-14 00:29:12,458 p=12997 u=alexlinux n=ansible INFO| 89.169.142.63              : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
