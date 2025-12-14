@@ -1,80 +1,75 @@
 ---
-# Домашнее задание 08-ansible-03-yandex
-# Полный playbook для ClickHouse, Vector и Lighthouse
-
 - name: Install ClickHouse
   hosts: clickhouse
-  become: yes
-  
+  become: true
+
   tasks:
     - name: Update apt cache
-      apt:
-        update_cache: yes
+      ansible.builtin.apt:
+        update_cache: true
         cache_valid_time: 3600
-        
+
     - name: Install ClickHouse packages
-      apt:
+      ansible.builtin.apt:
         name:
           - clickhouse-server
           - clickhouse-client
         state: present
-        update_cache: yes
 
 - name: Install Vector
   hosts: vector
-  become: yes
-  
+  become: true
+
   tasks:
-    - name: Download Vector package using get_url
-      get_url:
+    - name: Download Vector package
+      ansible.builtin.get_url:
         url: "https://packages.timber.io/vector/0.28.0/vector_0.28.0-1_amd64.deb"
         dest: "/tmp/vector.deb"
         mode: '0644'
         timeout: 30
-        
-    - name: Install Vector from deb package
-      apt:
+
+    - name: Install Vector
+      ansible.builtin.apt:
         deb: "/tmp/vector.deb"
         state: present
 
-- name: Install and Configure Lighthouse
+- name: Install Lighthouse with Nginx
   hosts: lighthouse
-  become: yes
-  
+  become: true
+
   tasks:
-    # 1. Установка Nginx через apt
-    - name: Install Nginx web server
-      apt:
+    - name: Install Nginx
+      ansible.builtin.apt:
         name: nginx
         state: present
-        update_cache: yes
-        
-    # 2. Скачивание статики Lighthouse через git
+
     - name: Clone Lighthouse repository
-      git:
+      ansible.builtin.git:
         repo: "https://github.com/VKCOM/lighthouse"
         dest: "/var/www/lighthouse"
-        
-    # 3. Настройка конфига Nginx через template
+        version: "master"  # Фиксируем версию
+
     - name: Configure Nginx for Lighthouse
-      template:
+      ansible.builtin.template:
         src: "templates/lighthouse-nginx.conf.j2"
         dest: "/etc/nginx/sites-available/lighthouse"
-        
+        mode: '0644'
+        owner: root
+        group: root
+
     - name: Enable Lighthouse site
-      file:
+      ansible.builtin.file:
         src: /etc/nginx/sites-available/lighthouse
         dest: /etc/nginx/sites-enabled/lighthouse
         state: link
-        
+
     - name: Disable default Nginx site
-      file:
+      ansible.builtin.file:
         path: /etc/nginx/sites-enabled/default
         state: absent
-        
-    # 4. Запуск веб-сервера
-    - name: Start and enable Nginx service
-      systemd:
+
+    - name: Start Nginx
+      ansible.builtin.systemd:
         name: nginx
         state: started
-        enabled: yes
+        enabled: true
