@@ -1,0 +1,255 @@
+---
+- name: Production настройка Lighthouse системы
+  hosts: localhost
+  become: true
+  gather_facts: true
+
+  vars:
+    lighthouse_user: lighthouse
+    lighthouse_dir: /opt/lighthouse
+    audit_sites:
+      - https://voronezh.poryadok.ru
+      - https://krasnodar.poryadok.ru
+      - https://poryadok.ru
+
+  tasks:
+    # 1. Создание пользователя и группы
+    - name: Создание группы для lighthouse
+      ansible.builtin.group:
+        name: "{{ lighthouse_user }}"
+        state: present
+        system: false
+      tags: user
+
+    - name: Создание пользователя для lighthouse
+      ansible.builtin.user:
+        name: "{{ lighthouse_user }}"
+        group: "{{ lighthouse_user }}"
+        shell: /bin/bash
+        home: "/home/{{ lighthouse_user }}"
+        create_home: true
+        system: false
+        password_lock: true  # Запрет входа по паролю
+        generate_ssh_key: true  # Автоматическая генерация SSH-ключа
+        ssh_key_comment: "Lighthouse automation key"
+        #append: true
+      tags: user
+
+    # 2. Создание рабочих директорий
+    - name: Создание основной директории
+      ansible.builtin.file:
+        path: "{{ lighthouse_dir }}"
+        state: directory
+        owner: "{{ lighthouse_user }}"
+        group: "{{ lighthouse_user }}"
+        mode: '0755'
+      tags: directories
+
+    - name: Создание директории для отчетов
+      ansible.builtin.file:
+        path: "{{ lighthouse_dir }}/reports"
+        state: directory
+        owner: "{{ lighthouse_user }}"
+        group: "{{ lighthouse_user }}"
+        mode: '0755'
+      tags: directories
+
+    - name: Создание директории для логов
+      ansible.builtin.file:
+        path: "/var/log/lighthouse"
+        state: directory
+        owner: "{{ lighthouse_user }}"
+        group: "{{ lighthouse_user }}"
+        mode: '0755'
+      tags: directories
+
+    # 3. Установка зависимостей
+    - name: Обновление apt кэша
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+      tags: packages
+
+    - name: Установка Node.js
+      ansible.builtin.apt:
+        name: nodejs
+        state: present
+      tags: packages
+
+    - name: Установка Google Chrome
+      ansible.builtin.apt:
+        name: google-chrome-stable
+        state: present
+      tags: packages
+
+    - name: Установка системных зависимостей для Chrome
+      ansible.builtin.apt:
+        name:
+          - libnss3
+          - libxss1
+          - libasound2
+          - libatk-bridge2.0-0
+          - libgtk-3-0
+          - libgbm1
+        state: present
+      tags: packages
+
+    # 4. Установка Lighthouse через npm
+    - name: Установка Lighthouse глобально
+      ansible.builtin.npm:
+        name: lighthouse
+        global: true
+        state: present
+      tags: npm
+
+    - name: Установка chrome-launcher
+      ansible.builtin.npm:
+        name: chrome-launcher
+        global: true
+        state: present
+      tags: npm
+
+    # 5. Настройка Python окружения
+    - name: Создание виртуальной среды Python (через python3 -m venv)
+      ansible.builtin.command:
+        cmd: python3 -m venv "{{ lighthouse_dir }}/venv"
+        creates: "{{ lighthouse_dir }}/venv/bin/activate"  # Идемпотентность: проверяем, существует ли уже venv
+      tags: python
+
+    - name: Создание файла requirements.txt
+      ansible.builtin.copy:
+        dest: "{{ lighthouse_dir }}/requirements.txt"
+        content: |
+          clickhouse-driver==0.2.6
+          requests==2.31.0
+          schedule==1.2.0
+        owner: "{{ lighthouse_user }}"
+        group: "{{ lighthouse_user }}"
+        mode: '0644'
+      tags: python
+
+    - name: Установка Python пакетов из файла requirements.txt
+      ansible.builtin.pip:
+        virtualenv: "{{ lighthouse_dir }}/venv"
+        requirements: "{{ lighthouse_dir }}/requirements.txt"
+        state: present
+       #  clickhouse-driver==0.2.6
+       #  requests==2.31.0
+       #  schedule==1.2.0
+      tags: python
+
+    # 6. Копирование скриптов
+    - name: Копирование скрипта аудита
+      ansible.builtin.template:
+        src: lighthouse_audit.py.j2
+        dest: "{{ lighthouse_dir }}/lighthouse_audit.py"
+        owner: "{{ lighthouse_user }}"
+        group: "{{ lighthouse_user }}"
+        mode: '0755'
+      tags: scripts
+
+    - name: Копирование конфигурации
+      ansible.builtin.copy:
+        content: |
+          [clickhouse]
+          host = localhost
+          port = 9000
+          user = default
+          password =
+          database = default
+
+          [audit]
+          sites = {{ audit_sites | join(',') }}
+          interval_hours = 24
+          timeout_seconds = 120
+        dest: "{{ lighthouse_dir }}/config.ini"
+        owner: "{{ lighthouse_user }}"
+        group: "{{ lighthouse_user }}"
+        mode: '0644'
+      tags: config
+
+    # 7. Настройка systemd сервиса
+    - name: Создание systemd сервиса
+      ansible.builtin.template:
+        src: lighthouse.service.j2
+        dest: /etc/systemd/system/lighthouse.service
+        owner: root
+        group: root
+        mode: '0644'
+      tags: systemd
+
+    - name: Перезагрузка systemd демона
+      ansible.builtin.systemd:
+        daemon_reload: true
+      tags: systemd
+
+    - name: Включение и запуск сервиса
+      ansible.builtin.systemd:
+        name: lighthouse
+        enabled: true
+        state: started
+        daemon_reload: true
+      tags: systemd
+
+    # 8. Настройка cron для регулярного аудита
+    - name: Настройка cron задачи
+      ansible.builtin.cron:
+        name: "Lighthouse ежедневный аудит"
+        minute: "0"
+        hour: "3"
+        job: "cd {{ lighthouse_dir }} && {{ lighthouse_dir }}/venv/bin/python lighthouse_audit.py"
+        user: "{{ lighthouse_user }}"
+        cron_file: lighthouse_audit
+        state: present
+      tags: cron
+
+    # 9. Создание лог-файла
+    - name: Создание лог-файла
+      ansible.builtin.file:
+        path: "/var/log/lighthouse/audit.log"
+        state: touch
+        owner: "{{ lighthouse_user }}"
+        group: "{{ lighthouse_user }}"
+        mode: '0644'
+      tags: logs
+
+    # 10. Проверка работы системы
+    - name: Проверка установки Chrome
+      ansible.builtin.command: google-chrome-stable --version
+      register: chrome_version
+      changed_when: false
+      tags: verification
+
+    - name: Проверка установки Lighthouse
+      ansible.builtin.command: lighthouse --version
+      register: lighthouse_version
+      changed_when: false
+      tags: verification
+
+    - name: Вывод информации о системе
+      ansible.builtin.debug:
+        msg: |
+          Директория установки: {{ lighthouse_dir }}
+          Пользователь: {{ lighthouse_user }}
+          Сайты для аудита: {{ audit_sites | join(', ') }}
+          Примечание: Проверка версий Chrome и Lighthouse была пропущена
+      tags: verification
+
+    - name: Проверка - существует ли файл сервиса
+      ansible.builtin.command: ls -la /etc/systemd/system/lighthouse.service
+      register: service_file_check
+      changed_when: false
+      tags: systemd
+
+    - name: Вывод содержимого файла сервиса (если есть)
+      ansible.builtin.command: cat /etc/systemd/system/lighthouse.service
+      register: service_content
+      changed_when: false
+      when: service_file_check.rc == 0
+      tags: systemd
+
+    - name: Проверка - видит ли systemd сервис
+      ansible.builtin.shell: systemctl list-unit-files | grep lighthouse
+      register: systemd_list
+      changed_when: false
+      tags: systemd

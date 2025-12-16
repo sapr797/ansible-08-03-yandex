@@ -1,0 +1,24 @@
+[Unit]
+Description=Lighthouse Audit Service
+After=network.target 
+
+[Service]
+Type=simple
+User={{ lighthouse_user }}
+Group={{ lighthouse_user }}
+WorkingDirectory={{ lighthouse_dir }}
+Environment="PATH={{ lighthouse_dir }}/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ExecStart={{ lighthouse_dir }}/venv/bin/python lighthouse_audit.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=append:/var/log/lighthouse/audit.log
+StandardError=append:/var/log/lighthouse/audit.log
+
+# Security
+ProtectSystem=full
+ReadWritePaths=/var/log/lighthouse /tmp
+PrivateTmp=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

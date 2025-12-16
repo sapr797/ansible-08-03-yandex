@@ -2,24 +2,35 @@
 - name: Install ClickHouse
   hosts: clickhouse
   become: true
-
+  gather_facts: false
   tasks:
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
         cache_valid_time: 3600
-
+      become: true
+      become_user: root
+      async: 3600  # Даём 5 минут на выполнение
+      poll: 0  # Не ждём завершения
+      register: apt_update
+    - name: Wait for apt update to complete
+      ansible.builtin.async_status:
+        jid: "{{ apt_update.ansible_job_id }}"
+      register: apt_job_result
+      until: apt_job_result.finished
+      retries: 30
+      delay: 10  # Проверяем каждые 10 секунд
     - name: Install ClickHouse packages
       ansible.builtin.apt:
         name:
           - clickhouse-server
           - clickhouse-client
         state: present
-
+      when: job_result.finished and job_result.rc == 0
 - name: Install Vector
   hosts: vector
   become: true
-
+  gather_facts: false
   tasks:
     - name: Download Vector package
       ansible.builtin.get_url:
@@ -27,47 +38,34 @@
         dest: "/tmp/vector.deb"
         mode: '0644'
         timeout: 30
-
     - name: Install Vector
       ansible.builtin.apt:
         deb: "/tmp/vector.deb"
         state: present
-
 - name: Install Lighthouse with Nginx
   hosts: lighthouse
   become: true
-
+  gather_facts: false
   tasks:
     - name: Install Nginx
       ansible.builtin.apt:
         name: nginx
         state: present
-
     - name: Clone Lighthouse repository
       ansible.builtin.git:
         repo: "https://github.com/VKCOM/lighthouse"
         dest: "/var/www/lighthouse"
-        version: "master"  # Фиксируем версию
-
+        version: "master"
     - name: Configure Nginx for Lighthouse
       ansible.builtin.template:
         src: "templates/lighthouse-nginx.conf.j2"
         dest: "/etc/nginx/sites-available/lighthouse"
         mode: '0644'
-        owner: root
-        group: root
-
     - name: Enable Lighthouse site
       ansible.builtin.file:
         src: /etc/nginx/sites-available/lighthouse
         dest: /etc/nginx/sites-enabled/lighthouse
         state: link
-
-    - name: Disable default Nginx site
-      ansible.builtin.file:
-        path: /etc/nginx/sites-enabled/default
-        state: absent
-
     - name: Start Nginx
       ansible.builtin.systemd:
         name: nginx

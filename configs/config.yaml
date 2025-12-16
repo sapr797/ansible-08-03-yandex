@@ -1,0 +1,33 @@
+# Конфигурация ClickHouse (IP вашего сервера ClickHouse)
+clickhouse:
+  host: "178.154.220.227"
+  port: 9000
+  user: "default"
+  password: ""
+  database: "default"
+
+# Конфигурация Lighthouse
+lighthouse:
+  chrome_path: "/usr/bin/google-chrome-stable"
+  extra_flags:
+#    - "--throttling.cpuSlowdownMultiplier=1"
+  #  - "--throttling.throughputKbps=10240"
+    - "--no-sandbox"
+    - "--headless"
+    - "--disable-dev-shm-usage"
+    - "--disable-gpu"
+    - "--remote-debugging-port=9222"
+
+
+
+# URL для регулярного аудита
+urls_to_audit:
+  - "https://voronezh.poryadok.ru"
+  - "https://krasnodar.poryadok.ru"
+  - "https://poryadok.ru"
+
+# Настройки скрипта
+settings:
+  reports_directory: "./reports"
+  max_audit_time: 300
+  keep_reports_days: 30
